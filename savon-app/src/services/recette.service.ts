@@ -10,7 +10,7 @@ import { RecetteDTO } from '../app/models/recetteDTO';
 })
 
 export class RecetteService {
-    private apiUrl = 'http://172.17.216.13:8080/api-savon/v1';
+    private apiUrl = 'http://localhost:8080/api-savon/v1';
   
     constructor(private http: HttpClient) {}
   

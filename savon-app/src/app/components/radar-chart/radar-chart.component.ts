@@ -1,7 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Component, Input, AfterViewInit, ViewChild, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { Chart, ChartConfiguration, ChartData, ChartType, registerables } from 'chart.js';
-
 
 
 @Component({
@@ -9,7 +7,7 @@ import { Chart, ChartConfiguration, ChartData, ChartType, registerables } from '
   templateUrl: './radar-chart.component.html',
   styleUrl: './radar-chart.component.css'
 })
-export class RadarChartComponent implements AfterViewInit {
+export class RadarChartComponent  {
   @ViewChild('radarCanvas') radarCanvas!: { nativeElement: HTMLCanvasElement };
   @Input() resultats: any[] = []; // Les données passées par RecetteIndex
 
@@ -18,12 +16,12 @@ export class RadarChartComponent implements AfterViewInit {
     'Douceur', 'Lavant', 'Vol mousse',
     'Tenue mousse', 'Dureté', 'Solubilité', 'Séchage'
   ];
-
+/**
   // Options du graphique
   public radarChartOptions: ChartConfiguration<'radar'>['options'] = {
-    plugins:{
-      legend:{
-        display:false
+    plugins: {
+      legend: {
+        display: false
       }
     },
     responsive: true,
@@ -38,7 +36,7 @@ export class RadarChartComponent implements AfterViewInit {
 
   // Type du graphique
   public radarChartType: ChartType = 'radar';
-  public isBrowser:Boolean;
+  public isBrowser: Boolean;
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
     Chart.register(...registerables);
@@ -53,9 +51,9 @@ export class RadarChartComponent implements AfterViewInit {
 
   private createRadarChart(): void {
     const dataValues = this.resultats
-      .filter(res => res.caracteristique.nom !== 'Indice INS'&& res.caracteristique.nom !=="Iode") // Exclure l'INS
+      .filter(res => res.caracteristique.nom !== 'Indice INS' && res.caracteristique.nom !== "Iode") // Exclure l'INS
       .map(res => res.score); // Extraire les scores
-console.log(dataValues)
+    console.log(dataValues)
     new Chart(this.radarCanvas.nativeElement, {
       type: 'radar',
       data: {
@@ -76,4 +74,5 @@ console.log(dataValues)
       options: this.radarChartOptions
     });
   }
+  */
 }
