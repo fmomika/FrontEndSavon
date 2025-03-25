@@ -13,7 +13,7 @@ export class IngredientCreateComponent {
   constructor(private ingredientService: IngredientService) { }
 
   onSubmit() {
-    this.ingredientService.postIngredient(this.ingredient).subscribe({
+    this.ingredientService.addIngredient(this.ingredient).subscribe({
       next: (savedIngredient) => {
         console.log("Un ingredient a était ajouter " + savedIngredient)
         alert("Ingrédient crée avec succès.")

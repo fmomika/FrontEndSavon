@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -19,6 +18,8 @@ import { IngredientListComponent } from './shared/ingredient-list/ingredient-lis
 import { IngredientFormComponent } from './shared/ingredient-form/ingredient-form.component';
 import { IngredientImportExportComponent } from './shared/ingredient-import-export/ingredient-import-export.component';
 import { IngredientManagerPageComponent } from './pages/ingredient-manager-page/ingredient-manager-page.component';
+import { ModalBoxConfirmationComponent } from './shared/modal-box-confirmation/modal-box-confirmation.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,13 +37,15 @@ import { IngredientManagerPageComponent } from './pages/ingredient-manager-page/
     IngredientListComponent,
     IngredientFormComponent,
     IngredientImportExportComponent,
-    IngredientManagerPageComponent
+    IngredientManagerPageComponent,
+    ModalBoxConfirmationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   providers: [
     provideClientHydration()

@@ -12,9 +12,9 @@ export class IngredientManagerPageComponent implements OnInit {
 // Attributs du composant :
 // ------------------------
 ingredients: Ingredient[] = [];
-// message: string = '';
+message: string = '';
 isEditing: boolean = false; // Permet de savoir si on est en mode édition
-//ingredientToEditId: number | null = null;
+ingredientToEditId: number | null = null;
 // Objet Ingredient de travail :
 // -----------------------------
 selectedIngredient: Ingredient = { ...DEFAULT_INGREDIENT };
@@ -57,15 +57,15 @@ if (this.isEditing && ingredient.id !== null) {
 this.ingredientService.updateIngredient(ingredient.id,
 ingredient).subscribe({
 next: () => {
-//this.message = 'Ingrédient mis à jour avec succès !';
+this.message = 'Ingrédient mis à jour avec succès !';
 this.isEditing = false;
 this.selectedIngredient = { ...DEFAULT_INGREDIENT };
 this.fetchIngredients(); // Recharge la liste
-//this.resetForm();
+this.resetForm();
 },
 error: (error) => {
 console.error('Erreur mise à jour ingrédient:', error);
-//this.message = 'Erreur lors de la mise à jour de l’ingrédient.';
+this.message = 'Erreur lors de la mise à jour de l’ingrédient.';
 }
 });
 } else {
@@ -75,12 +75,12 @@ next: (newIngredient) => {
 this.ingredients.push(newIngredient);
 this.selectedIngredient = { ...DEFAULT_INGREDIENT };
 this.isEditing = false;
-//this.message = 'Ingrédient ajouté avec succès !';
-//this.resetForm();
+this.message = 'Ingrédient ajouté avec succès !';
+this.resetForm();
 },
 error: (error) => {
 console.error('Erreur ajout ingrédient:', error);
-//this.message = 'Erreur lors de l’ajout de l’ingrédient.';
+this.message = 'Erreur lors de l’ajout de l’ingrédient.';
 }
 });
 }
@@ -92,7 +92,7 @@ ses données.
 */
 editIngredient(ingredient: Ingredient): void {
 this.selectedIngredient = { ...ingredient }; // Clone l'objet pour éviter les modifications directes
-//this.ingredientToEditId = ingredient.id;
+this.ingredientToEditId = ingredient.id;
 this.isEditing = true;
 }
 
@@ -102,15 +102,15 @@ this.isEditing = true;
 */
 deleteIngredient(id: number | null): void {
 if (id === null) return;
-//if (!confirm("Voulez-vous vraiment supprimer cet ingrédient ?")) return;
+if (!confirm("Voulez-vous vraiment supprimer cet ingrédient ?")) return;
 this.ingredientService.deleteIngredient(id).subscribe({
 next: () => {
 this.ingredients = this.ingredients.filter(ing => ing.id !== id);
-//this.message = 'Ingrédient supprimé avec succès.';
+this.message = 'Ingrédient supprimé avec succès.';
 },
 error: (error) => {
 console.error('Erreur suppression ingrédient:', error);
-//this.message = 'Erreur lors de la suppression de l’ingrédient.';
+this.message = 'Erreur lors de la suppression de l’ingrédient.';
 }
 });
 }

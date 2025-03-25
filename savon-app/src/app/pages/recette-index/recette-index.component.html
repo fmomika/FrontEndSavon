@@ -32,7 +32,18 @@
             </ul>
             <!-- Composant radar-chart pour afficher les résultats -->
             <div class="mt-3">
-              <app-radar-chart [resultats]="recette.listeResultats"></app-radar-chart>
+              <app-radar-chart
+                [title]="recette.titre"
+                [scores]="[
+                  recette.resultats[2].score,
+                  recette.resultats[3].score,
+                  recette.resultats[4].score,
+                  recette.resultats[5].score,
+                  recette.resultats[6].score,
+                  recette.resultats[7].score,
+                  recette.resultats[8].score
+                ]">
+              </app-radar-chart>
             </div>
   
             <!-- Bouton pour supprimer la recette -->

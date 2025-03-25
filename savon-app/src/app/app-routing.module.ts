@@ -5,13 +5,17 @@ import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.co
 import { RecipeCalculatorPageComponent } from './pages/recipe-calculator-page/recipe-calculator-page.component';
 import { IngredientCreateComponent } from './pages/ingredient-create/ingredient-create.component';
 import { RecetteIndexComponent } from './pages/recette-index/recette-index.component';
+import { RecetteCreateComponent } from './pages/recette-create/recette-create.component';
+import { IngredientManagerPageComponent } from './pages/ingredient-manager-page/ingredient-manager-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'confidentialite', component: PrivacyPolicyComponent },
   { path: 'calcul', component: RecipeCalculatorPageComponent},
   { path: 'ajout-ingredient', component: IngredientCreateComponent},
-  { path: 'recette', component: RecetteIndexComponent}
+  { path: 'recette', component: RecetteIndexComponent},
+  { path: 'recette/creer', component: RecetteCreateComponent},
+  { path: 'ingredients', component: IngredientManagerPageComponent}
 
 ];
 
