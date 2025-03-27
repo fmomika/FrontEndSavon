@@ -7,6 +7,8 @@ import { IngredientCreateComponent } from './pages/ingredient-create/ingredient-
 import { RecetteIndexComponent } from './pages/recette-index/recette-index.component';
 import { RecetteCreateComponent } from './pages/recette-create/recette-create.component';
 import { IngredientManagerPageComponent } from './pages/ingredient-manager-page/ingredient-manager-page.component';
+import { RecetteEditComponent } from './pages/recette-edit/recette-edit.component';
+
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,7 +17,8 @@ const routes: Routes = [
   { path: 'ajout-ingredient', component: IngredientCreateComponent},
   { path: 'recette', component: RecetteIndexComponent},
   { path: 'recette/creer', component: RecetteCreateComponent},
-  { path: 'ingredients', component: IngredientManagerPageComponent}
+  { path: 'ingredients', component: IngredientManagerPageComponent},
+  { path: 'recette/edit/:id', component: RecetteEditComponent}
 
 ];
 

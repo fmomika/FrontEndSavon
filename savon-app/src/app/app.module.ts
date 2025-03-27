@@ -20,6 +20,8 @@ import { IngredientImportExportComponent } from './shared/ingredient-import-expo
 import { IngredientManagerPageComponent } from './pages/ingredient-manager-page/ingredient-manager-page.component';
 import { ModalBoxConfirmationComponent } from './shared/modal-box-confirmation/modal-box-confirmation.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RecetteEditComponent } from './pages/recette-edit/recette-edit.component';
+import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker/modal-ingredient-picker.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +40,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     IngredientFormComponent,
     IngredientImportExportComponent,
     IngredientManagerPageComponent,
-    ModalBoxConfirmationComponent
+    ModalBoxConfirmationComponent,
+    RecetteEditComponent,
+    ModalIngredientPickerComponent
   ],
   imports: [
     BrowserModule,

@@ -4,14 +4,17 @@ import { Ingredient } from '../../models/ingredient';
 import { RecetteService } from '../../../services/recette.service';
 import { IngredientService } from '../../../services/ingredients.service';
 import { LigneIngredient } from '../../models/ligneIngredient';
+import { ActivatedRoute } from '@angular/router';
+import { Recette } from '../../models/recette';
+import { error } from 'console';
 @Component({
-  selector: 'app-recette-create',
-  templateUrl: './recette-create.component.html',
-  styleUrl: './recette-create.component.css'
+  selector: 'app-recette-edit',
+  templateUrl: './recette-edit.component.html',
+  styleUrl: './recette-edit.component.css'
 })
-export class RecetteCreateComponent {
-
-  recetteDTO = new RecetteDTO()
+export class RecetteEditComponent {
+  recetteId!: number;
+  recetteDTO=new RecetteDTO()
 
   ingredientIdSelect: number | null = null;
   listeIngredients: Ingredient[] = [];
@@ -19,11 +22,20 @@ export class RecetteCreateComponent {
   errorMessage: string = '';
   constructor(
     private recetteService: RecetteService,
-    private ingredientService: IngredientService 
+    private ingredientService: IngredientService,
+    private route: ActivatedRoute 
   ) {}
 
   ngOnInit(): void {
     this.fetchIngredients(); // Charger les ingrédients disponibles
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.recetteId = +id; // Convertir en nombre
+        this.fetchRecette();
+      }
+    });
+  
   }
 
   /**
@@ -42,6 +54,26 @@ export class RecetteCreateComponent {
       }
     });
   }
+  fetchRecette(): void {
+    this.isLoading = true;
+    this.recetteService.getRecetteById(this.recetteId).subscribe({
+      next: (data:Recette) => {
+        this.recetteDTO.titre=data.titre;
+        this.recetteDTO.description=data.description;
+        this.recetteDTO.surgraissage=data.surgraissage;
+        this.recetteDTO.avecSoude=data.avecSoude;
+        this.recetteDTO.qteAlcalin=data.qteAlcalin;
+        this.recetteDTO.concentrationAlcalin=data.concentrationAlcalin;
+        this.recetteDTO.ligneIngredients=data.ligneIngredients;
+        this.isLoading = false;
+      },
+      error: (error:Error) =>{
+        this.errorMessage = 'Erreur lors du chargement de la recette.';
+        this.isLoading = false;
+      }
+    }
+  )
+  }
 
   /**
    * Ajoute un nouvel ingrédient à la recette.
@@ -59,9 +91,6 @@ export class RecetteCreateComponent {
         nouvelleLigne.quantite = 0;
         nouvelleLigne.pourcentage = 0;
         this.recetteDTO.ligneIngredients.push(nouvelleLigne);
-        console.log("ReccetDTO",this.recetteDTO);
-        console.log("ingredient id ",nouvelleLigne.ingredientId);
-        
         console.log("Nouvelle ligne ajoutée :", nouvelleLigne);
         this.ingredientIdSelect = null;
         this.majPourcentages();
@@ -98,7 +127,7 @@ export class RecetteCreateComponent {
   onSubmit(): void {
     console.log(this.recetteDTO);
   
-    this.recetteService.addRecette(this.recetteDTO).subscribe({
+    this.recetteService.updateRecette(this.recetteId, this.recetteDTO).subscribe({
       next: (response) => {
         console.log('Recette enregistrée avec succès:', response);
         alert('Recette enregistrée avec succès !');
@@ -115,6 +144,5 @@ export class RecetteCreateComponent {
    */
   resetForm(): void {
    this.recetteDTO=new RecetteDTO()
-  }
+  } 
 }
-
