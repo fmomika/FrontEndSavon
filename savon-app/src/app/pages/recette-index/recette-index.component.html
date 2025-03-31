@@ -59,6 +59,7 @@
                       <b><u>Caractéristiques :</u></b>
 
                       <table>
+                        <tbody>
                           <tr>
                               <td><b>- Sugraissage : </b>{{ recette.surgraissage }}%</td>
                               <td><b>- {{ recette.resultats[0].caracteristique?.nom }} : </b>{{ recette.resultats[0].score.toFixed(1) }}</td>
@@ -79,8 +80,8 @@
                               <td><b>- {{ recette.resultats[7].caracteristique?.nom }} : </b>{{ recette.resultats[7].score.toFixed(1) }}</td>
                               <td><b>- {{ recette.resultats[8].caracteristique?.nom }} : </b>{{ recette.resultats[8].score.toFixed(1) }}</td>
                           </tr>
+                        </tbody>
                       </table>
-                      
                   </div>
 
                   <div class="mt-2">

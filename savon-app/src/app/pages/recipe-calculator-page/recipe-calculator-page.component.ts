@@ -13,7 +13,80 @@ import { IngredientService } from '../../../services/ingredients.service';
   styleUrl: './recipe-calculator-page.component.css'
 })
 export class RecipeCalculatorPageComponent implements OnInit{
+  availableIngredients: Ingredient[] = []; // à alimenter via service
+  selectedIngredients: LigneIngredient[] = []; // Liste des ingrédients sélectionnés
+  constructor(
+  private ingredientService: IngredientService,
+  private modalService: NgbModal
+  ) {}
+  /**
+  * Appel du service de récupération des ingrédients à l'initialisation
+  */
+  ngOnInit(): void {
+  this.loadIngredients();
+  }
+  loadIngredients(): void {
+    this.ingredientService.getAllIngredients().subscribe({
+      next: (ingredients) => {
+      this.availableIngredients = ingredients;
+      },
+      error: (err) => {
+      console.error('Erreur lors du chargement des ingrédients', err);
+      }
+      });
+    }
+    /**
+* Modal de sélection des ingrédients.
+*/
+openIngredientModal(): void {
+  const modalRef = this.modalService.open(ModalIngredientPickerComponent);
+  modalRef.componentInstance.ingredients = this.availableIngredients;
+  modalRef.result.then((selectedIngredient: Ingredient) => {
+  if (selectedIngredient) {
+  this.ajouterIngredient(selectedIngredient);
+  }
+  }).catch(() => {});
+  }
+  /**
+  * Méthode d'ajout d'un ingrédient à la recette
+  * @param ingredient Ingrédient à ajouter à la recette
+  */
+  ajouterIngredient(ingredient: Ingredient): void {
+  // Empêcher les doublons
+  if (this.selectedIngredients.find(l => l.ingredient?.id === ingredient.id)) {
+  return;
+  }
+  this.selectedIngredients.push({
+  ingredientId: 0, // valeur temporaire pour l'instant
+  recette: null, // sera renseigné côté backend à la soumission
+  ingredient: ingredient,
+  quantite: 0,
+  pourcentage: 0
+  });
+  }
+  /**
+  * Supprime un ingrédient préalablement choisi pour la recette en cours
+  * @param index
+  */
+  supprimerIngredient(index: number): void {
+  this.selectedIngredients.splice(index, 1);
+  }
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
+ 
+  
+  /** 
   recette=new Recette()
 
   ingredientIdSelect: number | null = null;
@@ -32,6 +105,7 @@ export class RecipeCalculatorPageComponent implements OnInit{
   /**
    * Charge la liste des ingrédients disponibles depuis l'API.
    */
+  /** 
   fetchIngredients(): void {
     this.isLoading = true;
     this.ingredientService.getAllIngredients().subscribe({
@@ -49,6 +123,8 @@ export class RecipeCalculatorPageComponent implements OnInit{
   /**
    * Ajoute un nouvel ingrédient à la recette.
    */
+
+  /** 
   ajoutLigne(): void {
     console.log("Début de ajoutLigne");
     if (this.ingredientIdSelect) {
@@ -77,6 +153,7 @@ export class RecipeCalculatorPageComponent implements OnInit{
   /**
    * Met à jour les pourcentages des ingrédients en fonction des quantités.
    */
+  /** 
   majPourcentages(): void {
     const totalQuantite = this.recette.ligneIngredients.reduce((sum, ligne) => sum + ligne.quantite, 0);
     this.recette.ligneIngredients.forEach((ligne) => {
@@ -87,6 +164,7 @@ export class RecipeCalculatorPageComponent implements OnInit{
   /**
    * Supprime une ligne d'ingrédient de la recette.
    */
+  /** 
   supprimerLigne(index: number): void {
     this.recette.ligneIngredients.splice(index, 1);
     this.majPourcentages(); // Mettre à jour les pourcentages
@@ -95,18 +173,8 @@ export class RecipeCalculatorPageComponent implements OnInit{
   /**
    * Soumet le formulaire pour créer une nouvelle recette.
    */
+  /** 
   onSubmit(): void {
     console.log(this.recette);
-  
-    this.recetteService.addRecette(this.recette).subscribe({
-      next: (response) => {
-        console.log('Recette enregistrée avec succès:', response);
-        alert('Recette enregistrée avec succès !');
-      },
-      error: (error) => {
-        console.error('Erreur lors de l\'enregistrement de la recette:', error);
-        alert('Erreur lors de l\'enregistrement de la recette.');
-      }
-    });
   }
-}
+    */
