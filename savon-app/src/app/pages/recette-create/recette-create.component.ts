@@ -4,6 +4,9 @@ import { Ingredient } from '../../models/ingredient';
 import { RecetteService } from '../../../services/recette.service';
 import { IngredientService } from '../../../services/ingredients.service';
 import { LigneIngredient } from '../../models/ligneIngredient';
+import { Recette } from '../../models/recette';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalIngredientPickerComponent } from '../../shared/modal-ingredient-picker/modal-ingredient-picker.component';
 @Component({
   selector: 'app-recette-create',
   templateUrl: './recette-create.component.html',
@@ -11,110 +14,110 @@ import { LigneIngredient } from '../../models/ligneIngredient';
 })
 export class RecetteCreateComponent {
 
-  recetteDTO = new RecetteDTO()
-
-  ingredientIdSelect: number | null = null;
-  listeIngredients: Ingredient[] = [];
-  isLoading: boolean = false;
-  errorMessage: string = '';
-  constructor(
-    private recetteService: RecetteService,
-    private ingredientService: IngredientService 
-  ) {}
-
-  ngOnInit(): void {
-    this.fetchIngredients(); // Charger les ingrédients disponibles
-  }
-
-  /**
-   * Charge la liste des ingrédients disponibles depuis l'API.
-   */
-  fetchIngredients(): void {
-    this.isLoading = true;
-    this.ingredientService.getAllIngredients().subscribe({
-      next: (data) => {
-        this.listeIngredients = data;
-        this.isLoading = false;
-      },
-      error: (error:Error) => {
-        this.errorMessage = 'Erreur lors du chargement des ingrédients.';
-        this.isLoading = false;
-      }
-    });
-  }
-
-  /**
-   * Ajoute un nouvel ingrédient à la recette.
-   */
-  ajoutLigne(): void {
-    console.log("Début de ajoutLigne");
-    if (this.ingredientIdSelect) {
-      console.log("Ingrédient sélectionné :", this.ingredientIdSelect);
-      const ingredient = this.listeIngredients.find((i) => i.id == this.ingredientIdSelect);
-      if (ingredient) {
-        console.log("Ingrédient trouvé :", ingredient);
-        const nouvelleLigne = new LigneIngredient();
-        nouvelleLigne.ingredient = ingredient;
-        nouvelleLigne.ingredientId = ingredient.id;
-        nouvelleLigne.quantite = 0;
-        nouvelleLigne.pourcentage = 0;
-        this.recetteDTO.ligneIngredients.push(nouvelleLigne);
-        console.log("ReccetDTO",this.recetteDTO);
-        console.log("ingredient id ",nouvelleLigne.ingredientId);
-        
-        console.log("Nouvelle ligne ajoutée :", nouvelleLigne);
-        this.ingredientIdSelect = null;
-        this.majPourcentages();
-        console.log("Pourcentages mis à jour :", this.recetteDTO.ligneIngredients);
-      } else {
-        console.error("Ingrédient non trouvé dans la liste.");
-      }
-    } else {
-      console.error("Aucun ingrédient sélectionné.");
-    }
-  }
-
-  /**
-   * Met à jour les pourcentages des ingrédients en fonction des quantités.
-   */
-  majPourcentages(): void {
-    const totalQuantite = this.recetteDTO.ligneIngredients.reduce((sum, ligne) => sum + ligne.quantite, 0);
-    this.recetteDTO.ligneIngredients.forEach((ligne) => {
-      ligne.pourcentage = totalQuantite > 0 ? (ligne.quantite / totalQuantite) * 100 : 0;
-    });
-  }
-
-  /**
-   * Supprime une ligne d'ingrédient de la recette.
-   */
-  supprimerLigne(index: number): void {
-    this.recetteDTO.ligneIngredients.splice(index, 1);
-    this.majPourcentages(); // Mettre à jour les pourcentages
-  }
-
-  /**
-   * Soumet le formulaire pour créer une nouvelle recette.
-   */
-  onSubmit(): void {
-    console.log(this.recetteDTO);
-  
-    this.recetteService.addRecette(this.recetteDTO).subscribe({
-      next: (response) => {
-        console.log('Recette enregistrée avec succès:', response);
-        alert('Recette enregistrée avec succès !');
-      },
-      error: (error) => {
-        console.error('Erreur lors de l\'enregistrement de la recette:', error);
-        alert('Erreur lors de l\'enregistrement de la recette.');
-      }
-    });
-  }
-
-  /**
-   * Réinitialise le formulaire après soumission.
-   */
-  resetForm(): void {
-   this.recetteDTO=new RecetteDTO()
-  }
+// Attributs :
+// -----------
+recetteDto: RecetteDTO = new RecetteDTO(); // Objet RecetteDTO de la nouvelle recette
+availableIngredients: Ingredient[] = []; // A alimenter via service
+selectedIngredients: LigneIngredient[] = []; // Liste des ingrédients sélectionnés
+totalMasse = 0; // Masse totale des corp gras
+//totalPourcentage = 0;
+// Méthodes :
+// ----------
+constructor(
+private ingredientService: IngredientService,
+private recetteService: RecetteService,
+private modalService: NgbModal
+) {}
+/**
+* Appel du service de récupération des ingrédients à l'initialisation
+*/
+ngOnInit(): void {
+this.loadIngredients();
 }
-
+loadIngredients(): void {
+  this.ingredientService.getAllIngredients().subscribe({
+  next: (ingredients) => {
+  this.availableIngredients = ingredients;
+  },
+  error: (err) => {
+  console.error('Erreur lors du chargement des ingrédients', err);
+  }
+  });
+  }
+  /**
+  * Modal de sélection des ingrédients.
+  */
+  openIngredientModal(): void {
+  const modalRef = this.modalService.open(ModalIngredientPickerComponent);
+  modalRef.componentInstance.ingredients = this.availableIngredients;
+  modalRef.result.then((selectedIngredient: Ingredient) => {
+  if (selectedIngredient) {
+  this.ajouterIngredient(selectedIngredient);
+  }
+  }).catch(() => {});
+  }
+  /**
+  * Méthode d'ajout d'un ingrédient à la recette
+  * @param ingredient Ingrédient à ajouter à la recette
+  */
+  ajouterIngredient(ingredient: Ingredient): void {
+  // Empêcher les doublons
+  if (this.selectedIngredients.find(l => l.ingredient?.id ===
+  ingredient.id)) {
+  return;
+  }
+  this.selectedIngredients.push({
+  ingredientId: 0, // valeur temporaire pour l'instant
+  recette: null, // sera renseigné côté backend à la soumission
+  ingredient: ingredient,
+  quantite: 0,
+  pourcentage: 0
+  });
+  }
+  /**
+  * Supprime un ingrédient préalablement choisi pour la recette en cours
+  * @param index
+  */
+  supprimerIngredient(index: number): void {
+  this.selectedIngredients.splice(index, 1);
+  }
+  /**
+* Recalcule les pourcentages
+*/
+recalculerPourcentages(): void {
+  this.totalMasse = this.selectedIngredients.reduce((acc, ligne) => acc +
+  ligne.quantite, 0); // Somme des masse des ingrédients de la recette
+  this.selectedIngredients.forEach(ligne => {
+  ligne.pourcentage = this.totalMasse > 0 ? + (ligne.quantite /
+  this.totalMasse * 100).toFixed(0) : 0; // Calcul les pourcentages des ingrédients
+  });
+  }
+  /**
+  * Méthode de soumission du nouvel ingrédient
+  */
+  onSubmit(): void {
+  // Associer les ingrédients au DTO :
+  const ligneIngredientDTOs = this.selectedIngredients.map(ligne => ({
+  quantite: ligne.quantite,
+  pourcentage: ligne.pourcentage,
+  ingredientId: ligne.ingredient?.id ?? 0
+  }));
+  //console.log(`LigneIngredientDTOs = `, ligneIngredientDTOs);
+  // Finalisation de l'objet RecetteDTO :
+  const recetteEnvoyee: RecetteDTO = {
+  ...this.recetteDto,
+  ligneIngredients: ligneIngredientDTOs
+  };
+  //console.log('Objet RecetteDTO prêt à envoyer :', this.recetteDto);
+  this.recetteService.addRecette(recetteEnvoyee).subscribe({
+  next: (recette: Recette) => {
+  //console.log('Recette reçue du backend :', recette);
+  // TODO : afficher résultat, rediriger ou notifier l'utilisateur
+  },
+  error: (err) => {
+  console.error('Erreur lors de la création de la recette :', err);
+  // TODO : afficher message d’erreur utilisateur
+  }
+  });
+  }
+  }

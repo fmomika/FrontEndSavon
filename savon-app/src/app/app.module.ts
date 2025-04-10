@@ -7,8 +7,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { HttpClientModule } from '@angular/common/http';
-import { RecipeCalculatorPageComponent } from './pages/recipe-calculator-page/recipe-calculator-page.component';
-import { RecipeManagerPageComponent } from './pages/recipe-manager-page/recipe-manager-page.component';
+
 import { IngredientCreateComponent } from './pages/ingredient-create/ingredient-create.component';
 import { FormsModule } from '@angular/forms';
 import { RadarChartComponent } from './components/radar-chart/radar-chart.component';
@@ -20,7 +19,6 @@ import { IngredientImportExportComponent } from './shared/ingredient-import-expo
 import { IngredientManagerPageComponent } from './pages/ingredient-manager-page/ingredient-manager-page.component';
 import { ModalBoxConfirmationComponent } from './shared/modal-box-confirmation/modal-box-confirmation.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RecetteEditComponent } from './pages/recette-edit/recette-edit.component';
 import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker/modal-ingredient-picker.component';
 @NgModule({
   declarations: [
@@ -29,9 +27,6 @@ import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker
     FooterComponent,
     HomeComponent,
     PrivacyPolicyComponent,
-
-    RecipeCalculatorPageComponent,
-    RecipeManagerPageComponent,
     IngredientCreateComponent,
     RadarChartComponent,
     RecetteIndexComponent,
@@ -41,7 +36,6 @@ import { ModalIngredientPickerComponent } from './shared/modal-ingredient-picker
     IngredientImportExportComponent,
     IngredientManagerPageComponent,
     ModalBoxConfirmationComponent,
-    RecetteEditComponent,
     ModalIngredientPickerComponent
   ],
   imports: [

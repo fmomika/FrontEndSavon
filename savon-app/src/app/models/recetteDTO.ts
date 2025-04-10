@@ -9,7 +9,6 @@ export class RecetteDTO {
   avecSoude: boolean = false;
   concentrationAlcalin: number = 0;
   qteAlcalin: number = 0;
-  ligneIngredients: LigneIngredient[] = [];
-  ligneIngredientsDTO: LigneIngredientDTO[] = [];
+  ligneIngredients: LigneIngredientDTO[] = [];
 
 }
